@@ -3,11 +3,11 @@
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
-const PORT = 3000
+const PORT = 3002
 
 let db,
     dbConnectionStr = 'mongodb+srv://rob:boo@cluster0.i9ynm.mongodb.net/to-do?retryWrites=true&w=majority',
-    dbName = 'rap'
+    dbName = 'to-do'
 
 MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
     .then(client => {
@@ -22,7 +22,7 @@ app.use(express.json())
 
 
 app.get('/',(request, response)=>{
-    db.collection('rappers').find().toArray()
+    db.collection('items').find().toArray()
     .then(data => {
         response.render('index.ejs', { info: data })
     })
@@ -30,7 +30,7 @@ app.get('/',(request, response)=>{
 })
 
 app.post('/addRapper', (request, response) => {
-    db.collection('rappers').insertOne(request.body)
+    db.collection('items').insertOne(request.body)
     .then(result => {
         console.log('item added')
         response.redirect('/')
@@ -39,7 +39,7 @@ app.post('/addRapper', (request, response) => {
 })
 
 app.delete('/deleteRapper', (request, response) => {
-    db.collection('rappers').deleteOne({item: request.body.stageNameS})
+    db.collection('items').deleteOne({item: request.body.stageNameS})
     .then(result => {
         console.log('item deleted')
         response.json('item deleted')
